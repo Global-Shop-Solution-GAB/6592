@@ -1,0 +1,494 @@
+﻿Program.Sub.Preflight.Start
+V.Global.bRev.Declare
+v.Global.sDropFP.Declare
+v.Global.iIndex.Declare
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+'Author: Robert Cole
+'Date: January 26, 2022
+
+V.Local.sLog.Declare
+F.Intrinsic.Control.Try
+
+F.Global.General.ReadOption("070008",0,False,"0000",V.Global.bRev)
+'True = Rev system on
+'False = Rev system off
+
+f.Intrinsic.Control.CallSub(LoopThroughMaintenanceTable)
+
+F.Intrinsic.Control.CallSub(SaveLog,"Log",V.Local.sLog)
+
+f.Intrinsic.Control.End
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("{2}{0}Could not reach End of Program{1}| Date: {3}{1}| Time: {4}{1}| User: {5}",V.Ambient.NewLine,V.Ambient.Tab,V.Local.sLog,V.Ambient.Date.FormatDD-MM-YYYY,V.Ambient.Time.FormatHH:NN:SS,V.Caller.User,V.Local.sLog)
+	F.Intrinsic.String.Build("{1}{0}Project: {2}{3}{3}Subroutine: {4}{3}Error Occurred {5} with description {6}{3}{3}GAB Version: {7}",V.Ambient.NewLine,V.Local.sLog,V.Caller.ScriptFile,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sLog)
+	F.Intrinsic.Control.CallSub(SaveLog,"Log",V.Local.sLog)
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.LoopThroughMaintenanceTable.Start
+'Big loops. Attaches all the documents placed in the directories (if there are any)
+F.Intrinsic.Control.Try
+
+V.Local.sLog.Declare
+v.Local.sSQL.Declare
+v.Local.sRet.Declare
+v.Local.sFiles.Declare
+v.Local.sDocType.Declare
+v.Local.sDocAttrib.Declare
+v.Local.i.Declare
+
+f.ODBC.Connection!conx.OpenCompanyConnection
+
+	f.ODBC.Connection!conx.ExecuteandReturn("Select rtrim(PATH)+'\' as PATH from ATG_DOC_PATH where DOCTYPE = 'DROPDOCS'",v.Global.sDropFP)
+
+f.ODBC.Connection!conx.Close
+
+f.Intrinsic.File.GetFileList(v.Global.sDropFP,v.Local.sFiles)
+
+f.Data.DataTable.CreateFromString("dtDFiles",v.Local.sFiles,"FILE_NAME","string","*!*",":",true)
+
+f.Intrinsic.Control.If(v.DataTable.dtDFiles(0).FILE_NAME!FieldValTrim,=,"")
+	f.Intrinsic.Control.CallSub(FailedFile,"FailState","NOFILE")
+	f.Intrinsic.Control.ExitSub
+f.Intrinsic.Control.EndIf
+
+f.Data.DataTable.AddExpressionColumn("dtDFiles","FILE_TYPE","string","SUBSTRING(FILE_NAME,1,2)")
+f.Data.DataTable.AddColumn("dtDFiles","DOC_ID","string")
+f.Data.DataTable.AddColumn("dtDFiles","DOC_TARGET","string")
+f.Data.DataTable.AddColumn("dtDFiles","DOC_ADDTL","string")
+f.Data.DataTable.AddColumn("dtDFiles","DOC_ID_OVD","string")
+f.Data.DataTable.AddColumn("dtDFiles","DOC_STRUCTURE","string")
+f.Data.DataTable.AddColumn("dtDFiles","DOC_PATH","string")
+f.Data.DataTable.AddColumn("dtDFiles","LINK_TYPE","string")
+f.Data.DataTable.AddColumn("dtDFiles","GRP_ID","string")
+f.Data.DataTable.AddColumn("dtDFiles","LINK_ID","string")
+
+f.ODBC.Connection!conx.OpenCompanyConnection
+
+f.Data.Dictionary.CreateFromSQL("DOC_STRUCTURE","conx","Select left(NAME_STRUCTURE,2), rtrim(NAME_STRUCTURE) as DOC_STRUCTURE from GCG_6592_FILE_MX")
+f.Data.Dictionary.SetDefaultReturn("DOC_STRUCTURE","")
+f.Data.DataTable.FillFromDictionary("dtDFiles","DOC_STRUCTURE","FILE_TYPE","DOC_STRUCTURE")
+f.Data.Dictionary.Close("DOC_STRUCTURE")
+
+f.Data.Dictionary.CreateFromSQL("DOC_PATH","conx","Select left(NAME_STRUCTURE,2), rtrim(PATH_BASE) as PATH_BASE from GCG_6592_FILE_MX")
+f.Data.Dictionary.SetDefaultReturn("DOC_PATH","")
+f.Data.DataTable.FillFromDictionary("dtDFiles","DOC_PATH","FILE_TYPE","DOC_PATH")
+f.Data.Dictionary.Close("DOC_PATH")
+
+f.Data.Dictionary.CreateFromSQL("LINK_TYPE","conx","Select left(NAME_STRUCTURE,2), TYPE_LINK from GCG_6592_FILE_MX")
+f.Data.Dictionary.SetDefaultReturn("LINK_TYPE","")
+f.Data.DataTable.FillFromDictionary("dtDFiles","LINK_TYPE","FILE_TYPE","LINK_TYPE")
+f.Data.Dictionary.Close("LINK_TYPE")
+
+f.Data.Dictionary.CreateFromSQL("GRP_ID","conx","Select left(NAME_STRUCTURE,2), GRP_ID from GCG_6592_FILE_MX")
+f.Data.Dictionary.SetDefaultReturn("GRP_ID","")
+f.Data.DataTable.FillFromDictionary("dtDFiles","GRP_ID","FILE_TYPE","GRP_ID")
+f.Data.Dictionary.Close("GRP_ID")
+
+f.ODBC.Connection!conx.Close
+
+f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtDFiles.RowCount--,1)
+	v.Global.iIndex.Set(v.Local.i)
+	f.Intrinsic.Control.If(v.DataTable.dtDFiles(v.Local.i).DOC_PATH!FieldValTrim,<>,"")
+		f.Intrinsic.String.Split(v.DataTable.dtDFiles(v.Local.i).FILE_NAME!FieldValTrim," ",v.Local.sDocAttrib)
+		f.Data.DataTable.SetValue("dtDFiles",v.Local.i,"DOC_ID",v.Local.sDocAttrib(1),"DOC_TARGET",v.Local.sDocAttrib(2),"DOC_ADDTL",v.Local.sDocAttrib(3),"DOC_ID_OVD",v.Local.sDocAttrib(4))
+		f.Intrinsic.Control.CallSub(LinkDocument)
+	f.Intrinsic.Control.Else
+		f.Intrinsic.Control.CallSub(FailedFile,"FailState","INVALID")
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Next(v.Local.i)
+
+'V.Local.sLog.Set(V.Args.Log)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("{2}{0}Could not reach End of Program{1}| Date: {3}{1}| Time: {4}{1}| User: {5}",V.Ambient.NewLine,V.Ambient.Tab,V.Local.sLog,V.Ambient.Date.FormatDD-MM-YYYY,V.Ambient.Time.FormatHH:NN:SS,V.Caller.User,V.Local.sLog)
+	F.Intrinsic.String.Build("{1}{0}Project: {2}{3}{3}Subroutine: {4}{3}Error Occurred {5} with description {6}{3}{3}GAB Version: {7}",V.Ambient.NewLine,V.Local.sLog,V.Caller.ScriptFile,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sLog)
+	F.Intrinsic.Control.CallSub(SaveLog,"Log",V.Local.sLog)
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndTry
+Program.Sub.LoopThroughMaintenanceTable.End
+
+Program.Sub.LinkDocument.Start
+'V.Args.LinkID, V.Args.File, V.Args.FilePath, V.Args.LinkType, V.Args.GroupID
+F.Intrinsic.Control.Try
+
+V.Local.sLog.Declare
+v.Local.sSQL.Declare
+v.Local.sRet.Declare
+v.Local.sDocID.Declare
+v.Local.sLinkType.Declare
+v.Local.sLinkID.Declare
+v.local.iLink.Declare
+v.Local.sFileID.Declare
+v.Local.sFileType.Declare
+v.Local.sFilePath.Declare
+v.Local.sYear.Declare
+v.Local.sMonth.Declare
+v.Local.bRet.Declare
+v.Local.sFP.Declare
+v.Local.sDate.Declare
+v.Local.sDropFile.Declare
+v.Local.sPassFile.Declare
+
+'V.Local.sLog.Set(V.Args.Log)
+
+f.Intrinsic.String.Format(v.Ambient.Date,"YYYY",v.Local.sYear)
+f.Intrinsic.String.Format(v.Ambient.Date,"mm-MMM",v.Local.sMonth)
+f.Intrinsic.String.UCase(v.Local.sMonth,v.Local.sMonth)
+f.Intrinsic.String.Format(v.Ambient.Now,"YYYY-MM-DD HH:MM:SS",v.Local.sDate)
+
+f.Intrinsic.String.LPad(v.DataTable.dtDFiles(v.Global.iIndex).LINK_TYPE!FieldValTrim,"0",5,v.Local.sLinkType)
+
+f.Intrinsic.Control.If(v.DataTable.dtDFiles(v.Global.iIndex).DOC_ID_OVD!FieldValTrim,<>,"",and,v.DataTable.dtDFiles(v.Global.iIndex).DOC_ID_OVD!FieldValTrim,<>,"OOB")
+
+	f.Intrinsic.String.Split(v.DataTable.dtDFiles(v.Global.iIndex).DOC_ID_OVD!FieldValTrim,".",v.Local.sDocID)
+	v.Local.sDocID.Set(v.Local.sDocID(0))
+
+f.Intrinsic.Control.Else
+
+	v.Local.sDocID.Set(v.DataTable.dtDFiles(v.Global.iIndex).DOC_ID!FieldValTrim)
+
+f.Intrinsic.Control.EndIf
+
+f.ODBC.Connection!conx.OpenCompanyConnection
+
+f.Intrinsic.String.Build("select top 1 y.PATH from LINK_DATA as x left join ATG_DOC_ASSOC as y on y.LINK_ID = cast(x.LINK_ID as int) where x.TYPE = '{0}' and x.ID = '{1}'",v.Local.sLinkType,v.DataTable.dtDFiles(v.Global.iIndex).DOC_ID!FieldValTrim,v.Local.sSQL)
+f.ODBC.Connection!conx.ExecuteandReturn(v.Local.sSQL,v.Local.sRet)
+
+f.ODBC.Connection!conx.Close
+
+f.Intrinsic.Control.If(v.Local.sRet,<>,"")
+
+	v.Local.sFP.Set(v.Local.sRet)
+	
+f.Intrinsic.Control.Else
+
+	f.Intrinsic.String.Build("{0}\{1}",v.DataTable.dtDFiles(v.Global.iIndex).DOC_PATH!FieldValTrim,v.Local.sYear,v.Local.sFP)
+	f.Intrinsic.File.DirExists(v.Local.sFP,v.Local.bRet)
+	f.Intrinsic.Control.If(v.Local.bRet,=,false)
+		f.Intrinsic.File.CreateDir(v.Local.sFP)
+	f.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.String.Build("{0}\{1}",v.Local.sFP,v.Local.sMonth,v.Local.sFP)
+	f.Intrinsic.File.DirExists(v.Local.sFP,v.Local.bRet)
+	f.Intrinsic.Control.If(v.Local.bRet,=,false)
+		f.Intrinsic.File.CreateDir(v.Local.sFP)
+	f.Intrinsic.Control.EndIf
+	
+	f.Intrinsic.String.Build("{0}\{1} {2} {3}",v.Local.sFP,v.DataTable.dtDFiles(v.Global.iIndex).FILE_TYPE!FieldValTrim,v.DataTable.dtDFiles(v.Global.iIndex).DOC_ID!FieldValTrim,v.DataTable.dtDFiles(v.Global.iIndex).DOC_TARGET!FieldValTrim,v.Local.sFP)
+	f.Intrinsic.File.DirExists(v.Local.sFP,v.Local.bRet)
+	f.Intrinsic.Control.If(v.Local.bRet,=,false)
+		f.Intrinsic.File.CreateDir(v.Local.sFP)
+	f.Intrinsic.Control.EndIf
+	
+f.Intrinsic.Control.EndIf
+
+f.ODBC.Connection!conx.OpenCompanyConnection
+
+f.Intrinsic.String.Build("Select * from LINK_DATA where TYPE = '{0}' and ID = '{1}'",v.Local.sLinkType,v.Local.sDocID,v.Local.sSQL)
+f.ODBC.Connection!conx.ExecuteandReturn(v.Local.sSQL,v.Local.sRet)
+
+f.ODBC.Connection!conx.Close
+
+f.Intrinsic.Control.If(v.Ambient.ExecuteandReturnEOF.not)
+
+	f.Intrinsic.String.Split(v.Local.sRet,"*!*",v.Local.sRet)
+	v.Local.iLink.Set(v.Local.sRet(0))
+	
+f.Intrinsic.Control.Else
+
+	f.ODBC.Connection!conx.OpenCompanyConnection
+'LINK_ID, TYPE, ID, PATH, FILE_NAME, FILL1, FILL2
+	f.ODBC.Connection!conx.ExecuteandReturn("select max(cast(LINK_ID as int))+1 as LINK_ID from LINK_DATA",v.Local.sLinkID)
+	v.Local.iLink.Set(v.Local.sLinkID)
+	f.Intrinsic.String.LPad(v.Local.sLinkID,"0",9,v.Local.sLinkID)
+	f.Intrinsic.String.Build("INSERT INTO LINK_DATA VALUES ('{0}', '{1}', '{2}', '', '', '', '')",v.Local.sLinkID,v.Local.sLinkType,v.Local.sDocID,v.Local.sSQL)
+	f.ODBC.Connection!conx.Execute(v.Local.sSQL)
+	f.ODBC.Connection!conx.Close
+	
+f.Intrinsic.Control.EndIf
+
+f.Data.DataTable.SetValue("dtDFiles",v.Global.iIndex,"LINK_ID",v.local.iLink)
+
+f.ODBC.Connection!conx.OpenCompanyConnection
+f.Intrinsic.String.Build("Select * from ATG_DOC_ASSOC where FILE = '{0}'",v.DataTable.dtDFiles(v.Global.iIndex).FILE_NAME!FieldValTrim,v.Local.sSQL)
+f.ODBC.Connection!conx.ExecuteandReturn(v.Local.sSQL,v.Local.sRet)
+f.ODBC.Connection!conx.Close
+
+f.Intrinsic.Control.If(v.Ambient.ExecuteandReturnEOF.not)
+
+	f.Intrinsic.Control.CallSub(FailedFile,"FailState","EXISTS")
+	
+f.Intrinsic.Control.Else
+
+	f.Intrinsic.String.Split(v.DataTable.dtDFiles(v.Global.iIndex).FILE_NAME!FieldValTrim,".",v.Local.sFileType)
+
+	f.ODBC.Connection!conx.OpenCompanyConnection
+	f.ODBC.Connection!conx.ExecuteandReturn("select max(cast(FILE_NUM as int))+1 as FILE_NUM from ATG_DOC_ASSOC",v.Local.sFileID)
+'FILE_NUM, LINK_ID, FILE_TYPE, PATH, FILE, DESCRIPTION, DATE_ADDED, GS_USER, GRP_ID, INFO_1, INFO_2, STATUS, REV, INV_NON_REV
+	f.Intrinsic.String.Build("INSERT INTO ATG_DOC_ASSOC VALUES ('{0}', '{1}', '{2}', '{3}\', '{4}', '{5}', '{6}', '{7}', '{8}', '', '', '', '', '0')",v.Local.sFileID,v.Local.iLink,v.Local.sFileType(v.Local.sFileType.UBound),v.Local.sFP,v.DataTable.dtDFiles(v.Global.iIndex).FILE_NAME!FieldValTrim,"",v.Local.sDate,"ONLINE",v.DataTable.dtDFiles(v.Global.iIndex).GRP_ID!FieldValTrim,v.Local.sSQL)
+	f.ODBC.Connection!conx.Execute(v.Local.sSQL)
+	f.ODBC.Connection!conx.Close
+	
+	f.Intrinsic.String.Build("{0}{1}",v.Global.sDropFP,v.DataTable.dtDFiles(v.Global.iIndex).FILE_NAME!FieldValTrim,v.Local.sDropFile)
+	f.Intrinsic.String.Build("{0}\{1}",v.Local.sFP,v.DataTable.dtDFiles(v.Global.iIndex).FILE_NAME!FieldValTrim,v.Local.sPassFile)
+	
+	f.Intrinsic.File.Exists(v.Local.sPassFile,v.Local.bRet)
+	
+	f.Intrinsic.Control.If(v.Local.bRet,=,false)
+	
+		f.Intrinsic.File.MoveFile(v.Local.sDropFile,v.Local.sPassFile,v.Local.sRet)
+		
+		f.Intrinsic.Control.If(v.DataTable.dtDFiles(v.Global.iIndex).DOC_ID_OVD!FieldValTrim,<>,"",and,v.DataTable.dtDFiles(v.Global.iIndex).DOC_ID_OVD!FieldValTrim,<>,"OOB")
+		
+			f.ODBC.Connection!conx.OpenCompanyConnection
+
+			f.Intrinsic.String.Build("select top 1 y.PATH from LINK_DATA as x left join ATG_DOC_ASSOC as y on y.LINK_ID = cast(x.LINK_ID as int) where x.TYPE = '{0}' and x.ID = '{1}'",v.Local.sLinkType,v.Local.sDocID,v.Local.sSQL)
+			f.ODBC.Connection!conx.ExecuteAndReturn(v.Local.sSQL,v.Local.sRet)
+			
+			f.ODBC.Connection!conx.Close
+			
+			f.Intrinsic.Control.If(v.Ambient.ExecuteAndReturnEOF.not)
+			
+				f.Intrinsic.File.CopyDirectory(v.Local.sRet,v.Local.sFP,True,v.Local.sRet)
+				
+			f.Intrinsic.Control.EndIf
+			
+		f.Intrinsic.Control.EndIf
+		
+	f.Intrinsic.Control.Else
+	
+		f.Intrinsic.Control.CallSub(FailedFile,"FailState","EXISTS")
+	
+	f.Intrinsic.Control.EndIf
+	
+f.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("{2}{0}Could not reach End of Program{1}| Date: {3}{1}| Time: {4}{1}| User: {5}",V.Ambient.NewLine,V.Ambient.Tab,V.Local.sLog,V.Ambient.Date.FormatDD-MM-YYYY,V.Ambient.Time.FormatHH:NN:SS,V.Caller.User,V.Local.sLog)
+	F.Intrinsic.String.Build("{1}{0}Project: {2}{3}{3}Subroutine: {4}{3}Error Occurred {5} with description {6}{3}{3}GAB Version: {7}",V.Ambient.NewLine,V.Local.sLog,V.Caller.ScriptFile,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sLog)
+	F.Intrinsic.Control.CallSub(SaveLog,"Log",V.Local.sLog)
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndTry
+Program.Sub.LinkDocument.End
+
+Program.Sub.FailedFile.Start
+'V.Args.File, V.Args.DropPath, V.Args.FailedPath, V.Args.Log
+F.Intrinsic.Control.Try
+
+V.Local.sLog.Declare
+v.Local.sFP.Declare
+v.Local.sDropFile.Declare
+v.Local.sFailFile.Declare
+v.Local.sMove.Declare
+v.Local.bRet.Declare
+
+'V.Local.sLog.Set(V.Args.Log)
+
+f.Intrinsic.String.Build("{0}FAILED",v.Global.sDropFP,v.Local.sFP)
+f.Intrinsic.File.DirExists(v.Local.sFP,v.Local.bRet)
+f.Intrinsic.Control.If(v.Local.bRet,=,false)
+	f.Intrinsic.File.CreateDir(v.Local.sFP)
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.If(v.DataTable.dtDFiles(0).FILE_NAME!FieldValTrim,<>,"")
+
+	f.Intrinsic.String.Build("{0}{1}",v.Global.sDropFP,v.DataTable.dtDFiles(v.Global.iIndex).FILE_NAME!FieldValTrim,v.Local.sDropFile)
+	f.Intrinsic.String.Build("{0}FAILED\{1}",v.Global.sDropFP,v.DataTable.dtDFiles(v.Global.iIndex).FILE_NAME!FieldValTrim,v.Local.sFailFile)
+	
+	f.Intrinsic.File.Exists(v.Local.sFailFile,v.Local.bRet)
+	
+	f.Intrinsic.Control.If(v.Local.bRet,=,False)
+	
+		f.Intrinsic.File.MoveFile(v.Local.sDropFile,v.Local.sFailFile,v.Local.sMove)
+		
+	f.Intrinsic.Control.Else
+		
+		f.Intrinsic.File.DeleteFile(v.Local.sFailFile)
+		f.Intrinsic.File.MoveFile(v.Local.sDropFile,v.Local.sFailFile,v.Local.sMove)
+	
+	f.Intrinsic.Control.EndIf
+	
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.SelectCase(v.Args.FailState)
+
+f.Intrinsic.Control.Case("INVALID")
+
+	F.Intrinsic.String.Build("{2}{0}{6} has an invalid structure.  It has been moved to the failed folder.{1}| Date: {3}{1}| Time: {4}{1}| User: {5}",V.Ambient.NewLine,V.Ambient.Tab,V.Local.sLog,V.Ambient.Date.FormatDD-MM-YYYY,V.Ambient.Time.FormatHH:NN:SS,V.Caller.User,v.DataTable.dtDFiles(v.Global.iIndex).FILE_NAME!FieldValTrim,V.Local.sLog)
+
+f.Intrinsic.Control.Case("EXISTS")
+
+	F.Intrinsic.String.Build("{2}{0}{6} Already exists in Document Control.  It has been moved to the failed folder.{1}| Date: {3}{1}| Time: {4}{1}| User: {5}",V.Ambient.NewLine,V.Ambient.Tab,V.Local.sLog,V.Ambient.Date.FormatDD-MM-YYYY,V.Ambient.Time.FormatHH:NN:SS,V.Caller.User,v.DataTable.dtDFiles(v.Global.iIndex).FILE_NAME!FieldValTrim,V.Local.sLog)
+
+f.Intrinsic.Control.Case("ILLEGAL")
+
+	F.Intrinsic.String.Build("{2}{0}{6} has illegal file name characters.  It has been moved to the failed folder.{1}| Date: {3}{1}| Time: {4}{1}| User: {5}",V.Ambient.NewLine,V.Ambient.Tab,V.Local.sLog,V.Ambient.Date.FormatDD-MM-YYYY,V.Ambient.Time.FormatHH:NN:SS,V.Caller.User,v.DataTable.dtDFiles(v.Global.iIndex).FILE_NAME!FieldValTrim,V.Local.sLog)
+	
+f.Intrinsic.Control.Case("NOFILE")
+	
+	F.Intrinsic.String.Build("{2}{0}There were no files found to link.  Ending program.{1}| Date: {3}{1}| Time: {4}{1}| User: {5}",V.Ambient.NewLine,V.Ambient.Tab,V.Local.sLog,V.Ambient.Date.FormatDD-MM-YYYY,V.Ambient.Time.FormatHH:NN:SS,V.Caller.User,V.Local.sLog)
+
+f.Intrinsic.Control.EndSelect
+
+F.Intrinsic.Control.CallSub(SaveLog,"Log",V.Local.sLog)
+
+f.Intrinsic.Control.If(v.Args.FailState,<>,"NOFILE")
+	F.Intrinsic.Control.CallSub(SendFailedEmails,"Log",V.Local.sLog)
+f.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("{2}{0}Could not reach End of Program{1}| Date: {3}{1}| Time: {4}{1}| User: {5}",V.Ambient.NewLine,V.Ambient.Tab,V.Local.sLog,V.Ambient.Date.FormatDD-MM-YYYY,V.Ambient.Time.FormatHH:NN:SS,V.Caller.User,V.Local.sLog)
+	F.Intrinsic.String.Build("{1}{0}Project: {2}{3}{3}Subroutine: {4}{3}Error Occurred {5} with description {6}{3}{3}GAB Version: {7}",V.Ambient.NewLine,V.Local.sLog,V.Caller.ScriptFile,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sLog)
+	F.Intrinsic.Control.CallSub(SaveLog,"Log",V.Local.sLog)
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndTry
+Program.Sub.FailedFile.End
+
+Program.Sub.SaveLog.Start
+'V.Args.Log
+V.Local.sLog.Declare
+V.Local.sLogFile.Declare
+V.Local.sLogFileString.Declare
+V.Local.sFileList.Declare
+V.Local.sFile.Declare
+V.Local.iCnt.Declare
+V.Local.bExists.Declare
+V.Local.dThirtyLess.Declare
+V.Local.dFileDate.Declare
+F.Intrinsic.Control.Try
+
+V.Local.sLog.Set(V.Args.Log)
+
+'Add to today's log file or create a new one if it doesn't exist
+F.Intrinsic.String.Build("{0}\CUSTOM\6592\{1}\LOG_FILES\",V.Caller.GlobalDir,V.Caller.CompanyCode,V.Local.sLogFile)
+F.Intrinsic.File.DirExists(V.Local.sLogFile,V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists.Not)
+	F.Intrinsic.File.CreateDir(V.Local.sLogFile)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.String.Build("{1}GCG_6592_AutoDocutmentLinkControl_{0}.txt",V.Ambient.Date.FormatMMDDYYYY,V.Local.sLogFile,V.Local.sLogFile)
+F.Intrinsic.File.Exists(V.Local.sLogFile,V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists)
+	F.Intrinsic.File.File2String(V.Local.sLogFile,V.Local.sLogFileString)
+	F.Intrinsic.String.Build("{1}{0}{2}",V.Ambient.NewLine,V.Local.sLogFileString,V.Local.sLog,V.Local.sLog)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.File.String2File(V.Local.sLogFile,V.Local.sLog)
+
+'Delete old logs over 30 days
+'F.Intrinsic.String.Build("{0}\CUSTOM\6592\{1}\LOG_FILES\",V.Caller.GlobalDir,V.Caller.CompanyCode,V.Local.sLogFile)
+'F.Intrinsic.File.GetFileList(V.Local.sLogFile,V.Local.sFileList)
+'F.Intrinsic.Control.If(V.Local.sFileList,!=,"")
+'	F.Intrinsic.Date.DateAdd("d",-30,V.Ambient.Date,V.Local.dThirtyLess)
+'	F.Intrinsic.String.Split(V.Local.sFileList,":",V.Local.sFileList)
+'	
+'	F.Intrinsic.Control.For(V.Local.iCnt,0,V.Local.sFileList.UBound,1)
+'		F.Intrinsic.String.Split(V.Local.sFileList(V.Local.iCnt),".",V.Local.sFile)
+'		F.Intrinsic.String.Split(V.Local.sFile(0),"_",V.Local.sFile)
+'		F.Intrinsic.Date.ConvertDString(V.Local.sFile(3),"MMDDYYYY",V.Local.dFileDate)
+'		F.Intrinsic.Control.If(V.Local.dFileDate,<,V.Local.dThirtyLess)
+'			'File is over 30 days old, delete it
+'			F.Intrinsic.String.Build("{0}{1}",V.Local.sLogFile,V.Local.sFileList(V.Local.iCnt),V.Local.sLogFile)
+'			F.Intrinsic.File.DeleteFile(V.Local.sLogFile)
+'		F.Intrinsic.Control.EndIf
+'		V.Local.sFile.Redim(0,0)
+'	F.Intrinsic.Control.Next(V.Local.iCnt)
+'F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("{0}\CUSTOM\6592\{1}\LOG_FILES\",V.Caller.GlobalDir,V.Caller.CompanyCode,V.Local.sLogFile)
+	F.Intrinsic.File.DeleteDir(V.Local.sLogFile)
+	F.Intrinsic.File.CreateDir(V.Local.sLogFile)
+	F.Intrinsic.String.Build("{0}\CUSTOM\6592\{1}\LOG_FILES\GCG_6592_ERR_FILE.txt",V.Caller.GlobalDir,V.Caller.CompanyCode,V.Local.sLogFile)
+	F.Intrinsic.File.String2File(V.Local.sLogFile,V.Local.sLog)
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndTry
+Program.Sub.SaveLog.End
+
+Program.Sub.SendEmails.Start
+'V.Args.Log
+V.Local.sLog.Declare
+V.Local.sSubject.Declare
+V.Local.sBody.Declare
+V.Local.sSender.Declare
+V.Local.sRecipients.Declare
+V.Local.sAttach.Declare
+V.Local.iCnt.Declare
+V.Local.iUserID.Declare
+F.Intrinsic.Control.Try
+
+'V.Local.sLog.Set(V.Args.Log)
+
+F.Global.Security.GetUserID(V.Caller.User,V.Caller.CompanyCode,V.Local.iUserID)
+F.Global.Security.GetUserEmail(V.Caller.User,V.Caller.CompanyCode,V.Local.sSender)
+F.Intrinsic.String.Build("{0}*!*",V.Local.sSender,V.Local.sSender)
+
+F.Intrinsic.Control.For(V.Local.iCnt,0,V.DataTable.dtRecipientQueue.RowCount--,1)
+	F.Intrinsic.String.Replace(V.DataTable.dtRecipientQueue(V.Local.iCnt).EMAILS!FieldVal,";","@!@*!*",V.Local.sRecipients)
+	F.Intrinsic.String.Build("*!*{0}",V.Local.sRecipients,V.Local.sRecipients)
+	
+	F.Intrinsic.String.Build("{0}*!*{1}",V.DataTable.dtRecipientQueue(V.Local.iCnt).FILE!FieldVal,V.DataTable.dtRecipientQueue(V.Local.iCnt).FILE_PATH!FieldVal,V.Local.sAttach)
+	
+	F.Intrinsic.String.Build("FILE ATTACHED TO {0} RECORD",V.DataTable.dtRecipientQueue(V.Local.iCnt).LINK_DESCRIPTION!FieldVal,V.Local.sSubject)
+	
+	F.Intrinsic.String.Build("File {0} attached to {1} record {2}",V.DataTable.dtRecipientQueue(V.Local.iCnt).FILE!FieldVal,V.DataTable.dtRecipientQueue(V.Local.iCnt).LINK_DESCRIPTION!FieldVal,V.DataTable.dtRecipientQueue(V.Local.iCnt).FILE_ID!FieldVal,V.Local.sBody)
+	F.Intrinsic.Control.If(V.DataTable.dtRecipientQueue(V.Local.iCnt).WORKORDER!FieldVal)
+		F.Intrinsic.String.Build("{0} and Work Orders attached to the Sales Order Lines",V.Local.sBody,V.Local.sBody)
+	F.Intrinsic.Control.EndIf
+	
+	F.Global.Messaging.QueueMessage(V.Caller.CompanyCode,V.Local.iUserID,"GCG_6592",V.Local.sSubject,V.Local.sSender,V.Local.sRecipients,V.Local.sBody,-1,"",False,"","","","","","","",V.Local.sFile,False)
+F.Intrinsic.Control.Next(V.Local.iCnt)
+
+F.Intrinsic.Variable.AddRV("Log",V.Local.sLog)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("{2}{0}Could not reach End of Program{1}| Date: {3}{1}| Time: {4}{1}| User: {5}",V.Ambient.NewLine,V.Ambient.Tab,V.Local.sLog,V.Ambient.Date.FormatDD-MM-YYYY,V.Ambient.Time.FormatHH:NN:SS,V.Caller.User,V.Local.sLog)
+	F.Intrinsic.String.Build("{1}{0}Project: {2}{3}{3}Subroutine: {4}{3}Error Occurred {5} with description {6}{3}{3}GAB Version: {7}",V.Ambient.NewLine,V.Local.sLog,V.Caller.ScriptFile,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sLog)
+	F.Intrinsic.Control.CallSub(SaveLog,"Log",V.Local.sLog)
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndTry
+Program.Sub.SendEmails.End
+
+Program.Sub.SendFailedEmails.Start
+'V.Args.Log
+V.Local.sLog.Declare
+V.Local.sSubject.Declare
+V.Local.sBody.Declare
+V.Local.sSender.Declare
+V.Local.sRecipients.Declare
+V.Local.iCnt.Declare
+V.Local.iUserID.Declare
+F.Intrinsic.Control.Try
+
+V.Local.sLog.Set(V.Args.Log)
+
+v.Local.sReg.Declare
+
+f.Global.Registry.ReadValue("SUPERVSR",v.Caller.CompanyCode,"6592MX",1000,1000,5,"",v.Local.sReg)
+
+F.Global.Security.GetUserID(V.Caller.User,V.Caller.CompanyCode,V.Local.iUserID)
+F.Global.Security.GetUserEmail(V.Caller.User,V.Caller.CompanyCode,V.Local.sSender)
+F.Intrinsic.String.Build("{0}*!*",V.Local.sSender,V.Local.sSender)
+
+	
+V.Local.sSubject.Set("FILE(S) FAILED TO LINK AND ARCHIVE")
+
+F.Global.Messaging.QueueMessage(V.Caller.CompanyCode,V.Local.iUserID,"GCG_6592",V.Local.sSubject,V.Local.sSender,v.Local.sReg,v.Local.sLog)
+
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.String.Build("{2}{0}Could not reach End of Program{1}| Date: {3}{1}| Time: {4}{1}| User: {5}",V.Ambient.NewLine,V.Ambient.Tab,V.Local.sLog,V.Ambient.Date.FormatDD-MM-YYYY,V.Ambient.Time.FormatHH:NN:SS,V.Caller.User,V.Local.sLog)
+	F.Intrinsic.String.Build("{1}{0}Project: {2}{3}{3}Subroutine: {4}{3}Error Occurred {5} with description {6}{3}{3}GAB Version: {7}",V.Ambient.NewLine,V.Local.sLog,V.Caller.ScriptFile,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sLog)
+	F.Intrinsic.Control.CallSub(SaveLog,"Log",V.Local.sLog)
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndTry
+Program.Sub.SendFailedEmails.End
+
+Program.Sub.Comments.Start
+${$5$}$2.0.0.0$}$2
+${$6$}$rcole$}$20220815153133791$}$ZUe18EWXbmRoTBVoeWbrFXakeGdGvm0Oq0Sy2GO/i0sNARKf5RYbH5xjDNTrLRRUd3U/AZhbKCY=
+Program.Sub.Comments.End
