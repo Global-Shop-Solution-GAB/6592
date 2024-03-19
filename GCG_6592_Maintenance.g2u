@@ -1,0 +1,737 @@
+﻿Program.Sub.ScreenSU.Start
+Gui.fmDLMaint..Create(BaseForm)
+Gui.fmDLMaint..Caption("Document Auto-link Maintenance")
+Gui.fmDLMaint..Size(9885,8415)
+Gui.fmDLMaint..MinX(0)
+Gui.fmDLMaint..MinY(0)
+Gui.fmDLMaint..Position(0,0)
+Gui.fmDLMaint..BackColor(-2147483633)
+Gui.fmDLMaint..MousePointer(0)
+Gui.fmDLMaint..Event(UnLoad,fmDLMaint_UnLoad)
+Gui.fmDLMaint..AlwaysOnTop(False)
+Gui.fmDLMaint..FontName("Tahoma")
+Gui.fmDLMaint..FontSize(8.25)
+Gui.fmDLMaint..ControlBox(True)
+Gui.fmDLMaint..MaxButton(False)
+Gui.fmDLMaint..MinButton(True)
+Gui.fmDLMaint..Moveable(True)
+Gui.fmDLMaint..Sizeable(False)
+Gui.fmDLMaint..ShowInTaskBar(True)
+Gui.fmDLMaint..TitleBar(True)
+Gui.fmDLMaint.frmCtrl.Create(Frame)
+Gui.fmDLMaint.frmCtrl.Size(9630,2895)
+Gui.fmDLMaint.frmCtrl.Position(75,60)
+Gui.fmDLMaint.frmCtrl.Enabled(True)
+Gui.fmDLMaint.frmCtrl.Visible(True)
+Gui.fmDLMaint.frmCtrl.Zorder(0)
+Gui.fmDLMaint.frmCtrl.Caption("")
+Gui.fmDLMaint.frmCtrl.FontName("Tahoma")
+Gui.fmDLMaint.frmCtrl.FontSize(8.25)
+Gui.fmDLMaint.cmdGrpBrw.Create(Button)
+Gui.fmDLMaint.cmdGrpBrw.Size(405,375)
+Gui.fmDLMaint.cmdGrpBrw.Position(645,480)
+Gui.fmDLMaint.cmdGrpBrw.Parent("frmCtrl")
+Gui.fmDLMaint.cmdGrpBrw.Event(Click,cmdGrpBrw_Click)
+Gui.fmDLMaint.cmdGrpBrw.TabStop(True)
+Gui.fmDLMaint.cmdGrpBrw.TabIndex(2)
+Gui.fmDLMaint.cmdGrpBrw.Caption("BROWSE")
+Gui.fmDLMaint.cmdGrpBrw.Enabled(True)
+Gui.fmDLMaint.cmdGrpBrw.Visible(True)
+Gui.fmDLMaint.cmdGrpBrw.Zorder(0)
+Gui.fmDLMaint.cmdGrpBrw.FontName("Tahoma")
+Gui.fmDLMaint.cmdGrpBrw.FontSize(8.25)
+Gui.fmDLMaint.lblGrpID7.Create(Label,"Drop Folder",True,975,210,0,105,1605,True,0,"Arial",8,-2147483633,0,0)
+Gui.fmDLMaint.lblGrpID7.Parent("frmCtrl")
+Gui.fmDLMaint.lblGrpID7.FontStyle(True,False,False,False,False)
+Gui.fmDLMaint.lblGrpID7.BorderStyle(0)
+Gui.fmDLMaint.cmdUpdate.Create(Button)
+Gui.fmDLMaint.cmdUpdate.Enabled(True)
+Gui.fmDLMaint.cmdUpdate.Visible(True)
+Gui.fmDLMaint.cmdUpdate.Zorder(0)
+Gui.fmDLMaint.cmdUpdate.Size(1020,375)
+Gui.fmDLMaint.cmdUpdate.Position(4890,2460)
+Gui.fmDLMaint.cmdUpdate.TabStop(True)
+Gui.fmDLMaint.cmdUpdate.TabIndex(12)
+Gui.fmDLMaint.cmdUpdate.Caption("Update")
+Gui.fmDLMaint.cmdUpdate.FontName("Tahoma")
+Gui.fmDLMaint.cmdUpdate.FontSize(8.25)
+Gui.fmDLMaint.cmdUpdate.Parent("frmCtrl")
+Gui.fmDLMaint.cmdUpdate.Event(Click,cmdUpdate_Click)
+Gui.fmDLMaint.lblEmail.Create(Label,"Failed Files E-mail",True,1455,210,0,105,2250,True,0,"Arial",8,-2147483633,0,0)
+Gui.fmDLMaint.lblEmail.BorderStyle(0)
+Gui.fmDLMaint.lblEmail.Parent("frmCtrl")
+Gui.fmDLMaint.txtEmail.Create(TextBox,"",True,4695,300,0,105,2505,True,0,"Arial",8,-2147483643,1)
+Gui.fmDLMaint.txtEmail.TabStop(True)
+Gui.fmDLMaint.txtEmail.TabIndex(9)
+Gui.fmDLMaint.txtEmail.Parent("frmCtrl")
+Gui.fmDLMaint.lblGrpID8.Create(Label,"Group Description",True,3510,255,0,2685,270,True,0,"Arial",8,-2147483633,0,0)
+Gui.fmDLMaint.lblGrpID8.Parent("frmCtrl")
+Gui.fmDLMaint.lblGrpID8.FontStyle(True,False,False,False,False)
+Gui.fmDLMaint.lblGrpID8.BorderStyle(0)
+Gui.fmDLMaint.txtGrpDesc.Create(TextBox,"",True,3600,300,0,2670,510,True,0,"Arial",8,-2147483643,1)
+Gui.fmDLMaint.txtGrpDesc.Parent("frmCtrl")
+Gui.fmDLMaint.txtGrpDesc.TabStop(True)
+Gui.fmDLMaint.txtGrpDesc.TabIndex(4)
+Gui.fmDLMaint.txtGrpDesc.MaxLength(200)
+Gui.fmDLMaint.cmdCancel.Create(Button)
+Gui.fmDLMaint.cmdCancel.Size(1020,375)
+Gui.fmDLMaint.cmdCancel.Position(7395,1830)
+Gui.fmDLMaint.cmdCancel.Parent("frmCtrl")
+Gui.fmDLMaint.cmdCancel.Caption("Cancel")
+Gui.fmDLMaint.cmdCancel.Event(Click,cmdCancel_Click)
+Gui.fmDLMaint.cmdCancel.TabStop(True)
+Gui.fmDLMaint.cmdCancel.TabIndex(13)
+Gui.fmDLMaint.cmdCancel.FontStyle(True,False,False,False,False)
+Gui.fmDLMaint.cmdCancel.Enabled(True)
+Gui.fmDLMaint.cmdCancel.Visible(True)
+Gui.fmDLMaint.cmdCancel.Zorder(0)
+Gui.fmDLMaint.cmdCancel.FontName("Tahoma")
+Gui.fmDLMaint.cmdCancel.FontSize(8.25)
+Gui.fmDLMaint.cmdSave.Create(Button)
+Gui.fmDLMaint.cmdSave.Size(1020,375)
+Gui.fmDLMaint.cmdSave.Position(8490,1830)
+Gui.fmDLMaint.cmdSave.Parent("frmCtrl")
+Gui.fmDLMaint.cmdSave.Caption("Save")
+Gui.fmDLMaint.cmdSave.Event(Click,cmdSave_Click)
+Gui.fmDLMaint.cmdSave.TabStop(True)
+Gui.fmDLMaint.cmdSave.TabIndex(12)
+Gui.fmDLMaint.cmdSave.FontStyle(True,False,False,False,False)
+Gui.fmDLMaint.cmdSave.Enabled(True)
+Gui.fmDLMaint.cmdSave.Visible(True)
+Gui.fmDLMaint.cmdSave.Zorder(0)
+Gui.fmDLMaint.cmdSave.FontName("Tahoma")
+Gui.fmDLMaint.cmdSave.FontSize(8.25)
+Gui.fmDLMaint.cmdDropBrw.Create(Button)
+Gui.fmDLMaint.cmdDropBrw.Size(405,375)
+Gui.fmDLMaint.cmdDropBrw.Position(4890,1830)
+Gui.fmDLMaint.cmdDropBrw.Parent("frmCtrl")
+Gui.fmDLMaint.cmdDropBrw.Event(Click,cmdDropBrw_Click)
+Gui.fmDLMaint.cmdDropBrw.TabStop(True)
+Gui.fmDLMaint.cmdDropBrw.TabIndex(10)
+Gui.fmDLMaint.cmdDropBrw.Caption("BROWSE")
+Gui.fmDLMaint.cmdDropBrw.Enabled(True)
+Gui.fmDLMaint.cmdDropBrw.Visible(True)
+Gui.fmDLMaint.cmdDropBrw.Zorder(0)
+Gui.fmDLMaint.cmdDropBrw.FontName("Tahoma")
+Gui.fmDLMaint.cmdDropBrw.FontSize(8.25)
+Gui.fmDLMaint.txtDropFP.Create(TextBox,"",True,4695,300,0,105,1860,True,0,"Arial",8,-2147483643,1)
+Gui.fmDLMaint.txtDropFP.Parent("frmCtrl")
+Gui.fmDLMaint.txtDropFP.TabStop(True)
+Gui.fmDLMaint.txtDropFP.TabIndex(9)
+Gui.fmDLMaint.lblGrpID6.Create(Label,"File Name Structure",True,1890,255,0,5385,930,True,0,"Arial",8,-2147483633,0,0)
+Gui.fmDLMaint.lblGrpID6.Parent("frmCtrl")
+Gui.fmDLMaint.lblGrpID6.FontStyle(True,False,False,False,False)
+Gui.fmDLMaint.lblGrpID6.BorderStyle(0)
+Gui.fmDLMaint.txtGrpID.Create(TextBox,"",True,450,300,0,105,510,True,0,"Arial",8,-2147483643,1)
+Gui.fmDLMaint.txtGrpID.Parent("frmCtrl")
+Gui.fmDLMaint.txtGrpID.Event(LostFocus,txtGrpID_LostFocus)
+Gui.fmDLMaint.txtGrpID.TabStop(True)
+Gui.fmDLMaint.txtGrpID.TabIndex(1)
+Gui.fmDLMaint.txtGrpID.MaxLength(2)
+Gui.fmDLMaint.txtFileStr.Create(TextBox,"",True,4125,300,0,5385,1170,True,0,"Arial",8,-2147483643,1)
+Gui.fmDLMaint.txtFileStr.Parent("frmCtrl")
+Gui.fmDLMaint.txtFileStr.TabStop(True)
+Gui.fmDLMaint.txtFileStr.TabIndex(11)
+Gui.fmDLMaint.txtFileStr.MaxLength(200)
+Gui.fmDLMaint.lblGrpID5.Create(Label,"Base Folder",True,1740,255,0,105,930,True,0,"Arial",8,-2147483633,0,0)
+Gui.fmDLMaint.lblGrpID5.Parent("frmCtrl")
+Gui.fmDLMaint.lblGrpID5.FontStyle(True,False,False,False,False)
+Gui.fmDLMaint.lblGrpID5.BorderStyle(0)
+Gui.fmDLMaint.cmdFileBrw.Create(Button)
+Gui.fmDLMaint.cmdFileBrw.Size(405,375)
+Gui.fmDLMaint.cmdFileBrw.Position(4890,1140)
+Gui.fmDLMaint.cmdFileBrw.Parent("frmCtrl")
+Gui.fmDLMaint.cmdFileBrw.Event(Click,cmdFileBrw_Click)
+Gui.fmDLMaint.cmdFileBrw.TabStop(True)
+Gui.fmDLMaint.cmdFileBrw.TabIndex(8)
+Gui.fmDLMaint.cmdFileBrw.Caption("BROWSE")
+Gui.fmDLMaint.cmdFileBrw.Enabled(True)
+Gui.fmDLMaint.cmdFileBrw.Visible(True)
+Gui.fmDLMaint.cmdFileBrw.Zorder(0)
+Gui.fmDLMaint.cmdFileBrw.FontName("Tahoma")
+Gui.fmDLMaint.cmdFileBrw.FontSize(8.25)
+Gui.fmDLMaint.txtLinkFP.Create(TextBox,"",True,4695,300,0,105,1170,True,0,"Arial",8,-2147483643,1)
+Gui.fmDLMaint.txtLinkFP.Parent("frmCtrl")
+Gui.fmDLMaint.txtLinkFP.TabStop(True)
+Gui.fmDLMaint.txtLinkFP.TabIndex(7)
+Gui.fmDLMaint.lblGrpID4.Create(Label,"Link Type Name",True,1260,255,0,7350,270,True,0,"Arial",8,-2147483633,0,0)
+Gui.fmDLMaint.lblGrpID4.Parent("frmCtrl")
+Gui.fmDLMaint.lblGrpID4.FontStyle(True,False,False,False,False)
+Gui.fmDLMaint.lblGrpID4.BorderStyle(0)
+Gui.fmDLMaint.lblGrpID3.Create(Label,"Type",True,525,255,0,6375,270,True,0,"Arial",8,-2147483633,0,0)
+Gui.fmDLMaint.lblGrpID3.Parent("frmCtrl")
+Gui.fmDLMaint.lblGrpID3.FontStyle(True,False,False,False,False)
+Gui.fmDLMaint.lblGrpID3.BorderStyle(0)
+Gui.fmDLMaint.lblGrpID2.Create(Label,"Group Name",True,1185,255,0,1140,270,True,0,"Arial",8,-2147483633,0,0)
+Gui.fmDLMaint.lblGrpID2.Parent("frmCtrl")
+Gui.fmDLMaint.lblGrpID2.FontStyle(True,False,False,False,False)
+Gui.fmDLMaint.lblGrpID2.BorderStyle(0)
+Gui.fmDLMaint.lblGrpID.Create(Label,"Grp",True,420,255,0,120,270,True,0,"Arial",8,-2147483633,0,0)
+Gui.fmDLMaint.lblGrpID.Parent("frmCtrl")
+Gui.fmDLMaint.lblGrpID.FontStyle(True,False,False,False,False)
+Gui.fmDLMaint.lblGrpID.BorderStyle(0)
+Gui.fmDLMaint.cboLinkType.Create(ComboBox)
+Gui.fmDLMaint.cboLinkType.Size(885,330)
+Gui.fmDLMaint.cboLinkType.Position(6375,495)
+Gui.fmDLMaint.cboLinkType.Parent("frmCtrl")
+Gui.fmDLMaint.cboLinkType.Event(LostFocus,cboLinkType_LostFocus)
+Gui.fmDLMaint.cboLinkType.TabStop(True)
+Gui.fmDLMaint.cboLinkType.TabIndex(5)
+Gui.fmDLMaint.cboLinkType.Enabled(True)
+Gui.fmDLMaint.cboLinkType.Visible(True)
+Gui.fmDLMaint.cboLinkType.Zorder(0)
+Gui.fmDLMaint.cboLinkType.FontName("Tahoma")
+Gui.fmDLMaint.cboLinkType.FontSize(8.25)
+Gui.fmDLMaint.txtLTName.Create(TextBox,"",True,2160,300,0,7350,510,True,0,"Arial",8,-2147483643,1)
+Gui.fmDLMaint.txtLTName.Parent("frmCtrl")
+Gui.fmDLMaint.txtLTName.Locked(True)
+Gui.fmDLMaint.txtLTName.TabStop(True)
+Gui.fmDLMaint.txtLTName.TabIndex(6)
+Gui.fmDLMaint.txtGrpName.Create(TextBox,"",True,1440,300,0,1140,510,True,0,"Arial",8,-2147483643,1)
+Gui.fmDLMaint.txtGrpName.Parent("frmCtrl")
+Gui.fmDLMaint.txtGrpName.TabStop(True)
+Gui.fmDLMaint.txtGrpName.TabIndex(3)
+Gui.fmDLMaint.txtGrpName.MaxLength(8)
+Gui.fmDLMaint.frmGsGc.Create(Frame)
+Gui.fmDLMaint.frmGsGc.Size(9630,4785)
+Gui.fmDLMaint.frmGsGc.Position(105,3030)
+Gui.fmDLMaint.frmGsGc.Anchor(15)
+Gui.fmDLMaint.frmGsGc.Enabled(True)
+Gui.fmDLMaint.frmGsGc.Visible(True)
+Gui.fmDLMaint.frmGsGc.Zorder(0)
+Gui.fmDLMaint.frmGsGc.Caption("")
+Gui.fmDLMaint.frmGsGc.FontName("Tahoma")
+Gui.fmDLMaint.frmGsGc.FontSize(8.25)
+Gui.fmDLMaint.GsGcMaint.Create(GsGridControl)
+Gui.fmDLMaint.GsGcMaint.Size(9630,4785)
+Gui.fmDLMaint.GsGcMaint.Position(0,0)
+Gui.fmDLMaint.GsGcMaint.Parent("frmGsGc")
+Gui.fmDLMaint.GsGcMaint.Event(RowCellClick,GsGcMaint_RowCellClick)
+Gui.fmDLMaint.GsGcMaint.TabStop(True)
+Gui.fmDLMaint.GsGcMaint.TabIndex(14)
+Gui.fmDLMaint.GsGcMaint.Anchor(15)
+Gui.fmDLMaint.GsGcMaint.Enabled(True)
+Gui.fmDLMaint.GsGcMaint.Visible(True)
+Gui.fmDLMaint.GsGcMaint.Zorder(0)
+Gui.fmDLMaint.GsGcMaint.Dock(5)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+v.Global.sFileID.Declare
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+v.Local.sReg.Declare
+
+f.Global.Registry.ReadValue("SUPERVSR",v.Caller.CompanyCode,"6592MX",1000,1000,5,"",v.Local.sReg)
+gui.fmDLMaint.txtEmail.Text(v.Local.sReg)
+
+f.Intrinsic.Control.CallSub(CBO_Load)
+f.Intrinsic.Control.CallSub(Data_Load)
+
+gui.fmDLMaint..Visible(true)
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.fmDLMaint_UnLoad.Start
+gui.fmDLMaint..Visible(false)
+
+f.Intrinsic.Control.End
+Program.Sub.fmDLMaint_UnLoad.End
+
+Program.Sub.Directory_Check.Start
+'CHECK FOR AND CREATE ANY DIRECTORIES NEEDED FOR 6592
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+v.Local.bRet.Declare
+v.Local.sFP.Declare
+
+f.Intrinsic.String.Build("{0}\CUSTOM\6592",v.Caller.GlobalDir,v.Local.sFP)
+f.Intrinsic.File.DirExists(v.Local.sFP,v.Local.bRet)
+f.Intrinsic.Control.If(v.Local.bRet,=,false)
+	f.Intrinsic.File.CreateDir(v.Local.sFP)
+f.Intrinsic.Control.EndIf
+v.Local.sFP.Set("")
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.Directory_Check.End
+
+Program.Sub.cmdGrpBrw_Click.Start
+'CREATE CUSTOM BROWSER TO SELECT DOC GROUPS FOR PODOCS
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+v.Local.sTitle.Declare
+v.Local.iWidth.Declare
+v.Local.sRet.Declare
+
+f.Intrinsic.String.Split("ID*!*GROUP*!*DESCRIPTION","*!*",v.Local.sTitle)
+f.Intrinsic.String.Split("200*!*800*!*1000","*!*",v.Local.iWidth)
+
+f.ODBC.Connection!conx.OpenCompanyConnection
+
+F.Intrinsic.UI.Browser("Document Control Group Browser","conx","select GRP_ID, rtrim(GRP_NAME) as GROUP_NAME, rtrim(GRP_DESC) as GROUP_DESCRIPTION from ATG_DOC_GRP",v.Local.sTitle,v.Local.iWidth,v.Local.sRet)
+
+f.ODBC.Connection!conx.Close
+
+f.Intrinsic.Control.If(v.Local.sRet,<>,"***CANCEL***")
+
+	f.Intrinsic.String.Split(v.Local.sRet,"*!*",v.Local.sRet)
+	gui.fmDLMaint.txtGrpID.Text(v.Local.sRet(0))
+	gui.fmDLMaint.txtGrpName.Text(v.Local.sRet(1))
+	gui.fmDLMaint.txtGrpDesc.Text(v.Local.sRet(2))
+	
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.CallSub(txtGrpID_LostFocus)
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdGrpBrw_Click.End
+
+Program.Sub.cmdFileBrw_Click.Start
+'OPEN BROWSER TO SELECT BASE FILE PATH
+f.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+v.Local.sFile.Declare
+F.Intrinsic.UI.FolderBrowser("Select where the documents will be transferred once linked.",V.Local.sFile)
+F.Intrinsic.Control.If(V.Local.sFile,<>,"***CANCEL***")
+	gui.fmDLMaint.txtLinkFP.Text(v.Local.sFile)
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdFileBrw_Click.End
+
+Program.Sub.cmdDropBrw_Click.Start
+'OPEN BROWSER TO SELECT DROP FILE PATH
+f.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+v.Local.sFile.Declare
+F.Intrinsic.UI.FolderBrowser("Select where the documents will be stored.",V.Local.sFile)
+F.Intrinsic.Control.If(V.Local.sFile,<>,"***CANCEL***")
+	gui.fmDLMaint.txtDropFP.Text(v.Local.sFile)
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdDropBrw_Click.End
+
+Program.Sub.txtGrpID_LostFocus.Start
+'POPULATE INFORMATION FOR DOC GROUP ID WHEN EXITING THE MACHINE ID FIELD
+f.Intrinsic.Control.Try
+V.Local.sError.Declare
+
+v.Local.sSQL.Declare
+v.Local.sRet.Declare
+
+f.Intrinsic.Control.If(v.Screen.fmDLMaint!txtGrpID.Text,<>,"00",and,v.Screen.fmDLMaint!txtGrpID.Text,<>,"")
+
+	f.ODBC.Connection!conx.OpenCompanyConnection
+		f.Intrinsic.String.Build("Select rtrim(GRP_NAME) as GRP_NAME, rtrim(GRP_DESC) as GRP_DESC from ATG_DOC_GRP where GRP_ID = '{0}'",v.Screen.fmDLMaint!txtGrpID.Text,v.Local.sSQL)
+		f.ODBC.Connection!conx.ExecuteandReturn(v.Local.sSQL,v.Local.sRet)
+	f.ODBC.Connection!conx.Close
+	
+	f.Intrinsic.String.Split(v.Local.sRet,"*!*",v.Local.sRet)
+	
+	gui.fmDLMaint.txtGrpName.Text(v.Local.sRet(0))
+	gui.fmDLMaint.txtGrpDesc.Text(v.Local.sRet(1))
+
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.txtGrpID_LostFocus.End
+
+Program.Sub.cboLinkType_LostFocus.Start
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+v.Local.sType.Declare
+v.Local.sSQL.Declare
+v.Local.sRet.Declare
+
+f.Intrinsic.Control.If(v.Screen.fmDLMaint!cboLinkType.Text,<>,"")
+
+	f.Intrinsic.String.Split(v.Screen.fmDLMaint!cboLinkType.Text," - ",v.Local.sType)
+	gui.fmDLMaint.cboLinkType.Text(v.Local.sType(0))
+	
+	f.ODBC.Connection!conx.OpenCompanyConnection
+		f.Intrinsic.String.Build("Select rtrim(DESCRIPTION) as DESCRIPTION from GCG_5951_LINK_TYPES where LINK_TYPE = '{0}'",v.Screen.fmDLMaint!cboLinkType.Text,v.Local.sSQL)
+		f.ODBC.Connection!conx.ExecuteandReturn(v.Local.sSQL,v.Local.sRet)
+	f.ODBC.Connection!conx.Close
+	
+	gui.fmDLMaint.txtLTName.Text(v.Local.sRet)
+	
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.cboLinkType_LostFocus.End
+
+Program.Sub.cmdSave_Click.Start
+'ADD NEW RECORD FOR NEW DOCUMENT GROUP
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+v.Local.sDescT.Declare
+v.Local.sSQL.Declare
+v.Local.iRet.Declare
+v.Local.iGrpId.Declare
+v.Local.iPathID.Declare
+
+f.Intrinsic.String.RTrim(v.Screen.fmDLMaint!txtGrpDesc.Value,v.Local.sDescT)
+f.Intrinsic.String.UCase(v.Local.sDescT,v.Local.sDescT)
+
+f.Intrinsic.Control.If(v.Screen.fmDLMaint!txtGrpName.Text,<>,"",and,v.Screen.fmDLMaint!txtFileStr.Text,<>,"",v.Screen.fmDLMaint!txtLinkFP.Text,<>,"")
+
+	f.ODBC.Connection!conx.OpenCompanyConnection
+
+'GETS THE NEXT GROUP ID IF THE GROUP HASN'T BEEN SET YET AND CREATES A GROUP RECORD FOR THE DATA ENTERED
+	f.Intrinsic.String.Build("select * from ATG_DOC_GRP where GRP_NAME = '{0}'",v.Screen.fmDLMaint!txtGrpName.Text,v.Local.sSQL)
+	f.ODBC.Connection!conx.OpenLocalRecordsetRW("ID",v.Local.sSQL)
+	f.Intrinsic.Control.If(v.ODBC.conx!ID.EOF,=,true)
+		f.ODBC.Connection!conx.ExecuteandReturn("select isnull(max(x.GRP_ID)+1,1) as GRP_ID from ATG_DOC_GRP as x",v.Local.iGrpId)
+		f.ODBC.conx!ID.AddNew
+		f.ODBC.conx!ID.Set!GRP_ID(v.Local.iGrpId)
+		f.ODBC.conx!ID.Set!GRP_NAME(v.Screen.fmDLMaint!txtGrpName.Text)
+		gui.fmDLMaint.txtGrpID.Text(v.Local.iGrpId)
+	f.Intrinsic.Control.EndIf
+		f.ODBC.conx!ID.Set!GRP_DESC(v.Local.sDescT)
+		f.ODBC.conx!ID.Update
+	f.ODBC.conx!ID.Close
+	
+'CREATES A DOCUMENT PATH RECORD FOR OUR DOC TYPE FOLDER AND ASSIGNS THE TYPE OF DROPDOCS FOR THE PROJECT
+	f.Intrinsic.String.Build("select * from ATG_DOC_PATH where DOCTYPE = '{0}'",v.Screen.fmDLMaint!txtGrpName.Text,v.Local.sSQL)
+	f.ODBC.Connection!conx.OpenLocalRecordsetRW("ID",v.Local.sSQL)
+	f.Intrinsic.Control.If(v.ODBC.conx!ID.EOF,=,true)
+		f.ODBC.Connection!conx.ExecuteandReturn("select isnull(max(x.PATHID)+1,1) as PATHID from ATG_DOC_PATH as x",v.Local.iPathID)
+		f.ODBC.conx!ID.AddNew
+		f.ODBC.conx!ID.Set!PATHID(v.Local.iPathID)
+		f.ODBC.conx!ID.Set!DOCTYPE(v.Screen.fmDLMaint!txtGrpName.Text)
+	f.Intrinsic.Control.EndIf
+		f.ODBC.conx!ID.Set!PATH(v.Screen.fmDLMaint!txtLinkFP.Text)
+		f.ODBC.conx!ID.Update
+	f.ODBC.conx!ID.Close
+	
+'CREATES A DOCUMENT PATH RECORD FOR OUR DROP FOLDER AND ASSIGNS THE TYPE OF DROPDOCS FOR THE PROJECT
+	f.Intrinsic.String.Build("select * from ATG_DOC_PATH where DOCTYPE = '{0}'","DROPDOCS",v.Local.sSQL)
+	f.ODBC.Connection!conx.OpenLocalRecordsetRW("ID",v.Local.sSQL)
+	f.Intrinsic.Control.If(v.ODBC.conx!ID.EOF,=,true)
+		f.ODBC.Connection!conx.ExecuteandReturn("select isnull(max(x.PATHID)+1,1) as PATHID from ATG_DOC_PATH as x",v.Local.iRet)
+		f.ODBC.conx!ID.AddNew
+		f.ODBC.conx!ID.Set!PATHID(v.Local.iRet)
+		f.ODBC.conx!ID.Set!DOCTYPE("DROPDOCS")
+	f.Intrinsic.Control.EndIf
+		f.ODBC.conx!ID.Set!PATH(v.Screen.fmDLMaint!txtDropFP.Text)
+		f.ODBC.conx!ID.Update
+	f.ODBC.conx!ID.Close
+	
+'CREATES A RECORD TO STORE CUSTOM DATA FROM THE FILE MX SCREEN
+	f.Intrinsic.String.Build("select * from GCG_6592_FILE_MX where FILE_ID = '{0}'",v.Global.sFileID,v.Local.sSQL)
+	f.ODBC.Connection!conx.OpenLocalRecordsetRW("ID",v.Local.sSQL)
+	f.Intrinsic.Control.If(v.ODBC.conx!ID.EOF,=,true)
+		f.ODBC.Connection!conx.ExecuteandReturn("select isnull(max(FILE_ID)+1,1) as FILE_ID from GCG_6592_FILE_MX",v.Local.iRet)
+		f.ODBC.conx!ID.AddNew
+		f.ODBC.conx!ID.Set!FILE_ID(v.Local.iRet)
+		f.ODBC.conx!ID.Set!ID_ATG(v.Local.iPathID)
+	f.Intrinsic.Control.EndIf
+		f.ODBC.conx!ID.Set!GRP_ID(v.Screen.fmDLMaint!txtGrpID.Text)
+		f.ODBC.conx!ID.Set!TYPE_LINK(v.Screen.fmDLMaint!cboLinkType.Text)
+		f.ODBC.conx!ID.Set!NAME_STRUCTURE(v.Screen.fmDLMaint!txtFileStr.Text)
+		f.ODBC.conx!ID.Set!PATH_BASE(v.Screen.fmDLMaint!txtLinkFP.Text)
+		f.ODBC.conx!ID.Set!PATH_DROP(v.Screen.fmDLMaint!txtDropFP.Text)
+		f.ODBC.conx!ID.Set!DOCTYPE_ATG(v.Screen.fmDLMaint!txtGrpName.Text)
+		f.ODBC.conx!ID.Update
+	f.ODBC.conx!ID.Close
+	
+	f.ODBC.Connection!conx.Close
+	
+f.Intrinsic.Control.Else
+
+	f.Intrinsic.UI.Msgbox("All values need to be filled out.  Cannot have blank values.","ERROR")
+
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.CallSub(cmdCancel_Click)
+
+f.Intrinsic.Control.CallSub(Data_Load)
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdSave_Click.End
+
+Program.Sub.cmdCancel_Click.Start
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+v.Global.sFileID.Set("")
+
+gui.fmDLMaint.txtGrpID.Text("")
+gui.fmDLMaint.txtGrpName.Text("")
+gui.fmDLMaint.txtGrpDesc.Text("")
+gui.fmDLMaint.cboLinkType.Text("")
+gui.fmDLMaint.txtLTName.Text("")
+gui.fmDLMaint.txtLinkFP.Text("")
+gui.fmDLMaint.txtFileStr.Text("")
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdCancel_Click.End
+
+Program.Sub.GsGcMaint_RowCellClick.Start
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+f.Intrinsic.Control.If(v.Args.Column,=,"DELETE")
+
+f.Intrinsic.Control.Else
+
+	v.Global.sFileID.Set(v.DataTable.dtFileMX(v.Args.RowIndex).FILE_ID!FieldVal)
+	gui.fmDLMaint.txtGrpID.Text(v.DataTable.dtFileMX(v.Args.RowIndex).GRP_ID!FieldVal)
+	gui.fmDLMaint.cboLinkType.Text(v.DataTable.dtFileMX(v.Args.RowIndex).TYPE_LINK!FieldValTrim)
+	gui.fmDLMaint.txtLinkFP.Text(v.DataTable.dtFileMX(v.Args.RowIndex).PATH_BASE!FieldValTrim)
+	gui.fmDLMaint.txtFileStr.Text(v.DataTable.dtFileMX(v.Args.RowIndex).NAME_STRUCTURE!FieldValTrim)
+	f.Intrinsic.Control.CallSub(txtGrpID_LostFocus)
+	f.Intrinsic.Control.CallSub(cboLinkType_LostFocus)
+	
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.GsGcMaint_RowCellClick.End
+
+Program.Sub.Data_Load.Start
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+v.Local.sRet.Declare
+
+f.Intrinsic.Control.If(v.DataTable.dtFileMX.Exists)
+	f.Data.DataView.Close("dtFileMX","dvFileMX")
+	f.Data.DataTable.Close("dtFileMX")
+f.Intrinsic.Control.EndIf
+
+f.ODBC.Connection!conx.OpenCompanyConnection
+
+	f.Data.DataTable.CreateFromSQL("dtFileMX","conx","Select FILE_ID, GRP_ID, TYPE_LINK, rtrim(NAME_STRUCTURE) as NAME_STRUCTURE, rtrim(PATH_BASE) as PATH_BASE, ID_ATG, rtrim(DOCTYPE_ATG) as DOCTYPE_ATG from GCG_6592_FILE_MX",true)
+	f.ODBC.Connection!conx.ExecuteandReturn("Select rtrim(PATH) from ATG_DOC_PATH where DOCTYPE = 'DROPDOCS'",v.Local.sRet)
+	
+	f.Data.DataTable.AddColumn("dtFileMX","GRP_DESC","string")
+	f.Data.DataTable.AddColumn("dtFileMX","DESC_LINK","string")
+	f.Data.DataTable.AddColumn("dtFileMX","DELETE","string")
+	
+	f.Data.Dictionary.CreateFromSQL("GRP_DESC","conx","Select GRP_ID, rtrim(GRP_DESC) as GRP_DESC from ATG_DOC_GRP")
+	f.Data.Dictionary.SetDefaultReturn("GRP_DESC","")
+	f.Data.DataTable.FillFromDictionary("dtFileMX","GRP_DESC","GRP_ID","GRP_DESC")
+	f.Data.Dictionary.Close("GRP_DESC")
+	
+	f.Data.Dictionary.CreateFromSQL("DESC_LINK","conx","Select LINK_TYPE, rtrim(DESCRIPTION) as DESC_LINK from GCG_5951_LINK_TYPES")
+	f.Data.Dictionary.SetDefaultReturn("DESC_LINK","")
+	f.Data.DataTable.FillFromDictionary("dtFileMX","DESC_LINK","TYPE_LINK","DESC_LINK")
+	f.Data.Dictionary.Close("DESC_LINK")
+	
+f.ODBC.Connection!conx.Close
+
+f.Data.DataView.Create("dtFileMX","dvFileMX")
+
+gui.fmDLMaint.txtDropFP.Text(v.Local.sRet)
+
+f.Intrinsic.Control.CallSub(GV_Format)
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.Data_Load.End
+
+Program.Sub.GV_Format.Start
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+v.Local.i.Declare
+
+gui.fmDLMaint.GsGcMaint.AddGridviewFromDataview("gvFileMX","dtFileMX","dvFileMX")
+
+gui.fmDLMaint.GsGcMaint.Visible(false)
+gui.fmDLMaint.GsGcMaint.SuspendLayout()
+
+'gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","","Caption","")
+'gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","","HeaderFontBold","TRUE")
+'gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","","HeaderHAlignment","CENTER")
+'gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","","CellHAlignment","CENTER")
+'gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","","MinWidth",)
+'gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","","ReadOnly","TRUE")
+'gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","","AllowEdit","FALSE")
+'gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","","VisibleIndex",v.Local.i)
+'f.Intrinsic.Math.Add(v.local.i,1,v.Local.i)
+
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","FILE_ID","Visible",False)
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","GRP_ID","Visible",False)
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","TYPE_LINK","Visible",False)
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","ID_ATG","Visible",False)
+
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DOCTYPE_ATG","Caption","Doc Grp")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DOCTYPE_ATG","HeaderFontBold","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DOCTYPE_ATG","HeaderHAlignment","CENTER")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DOCTYPE_ATG","CellHAlignment","LEFT")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DOCTYPE_ATG","MinWidth",85)
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DOCTYPE_ATG","ReadOnly","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DOCTYPE_ATG","AllowEdit","FALSE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DOCTYPE_ATG","VisibleIndex",v.Local.i)
+f.Intrinsic.Math.Add(v.local.i,1,v.Local.i)
+
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","GRP_DESC","Caption","Grp Description")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","GRP_DESC","HeaderFontBold","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","GRP_DESC","HeaderHAlignment","CENTER")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","GRP_DESC","CellHAlignment","LEFT")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","GRP_DESC","MinWidth",200)
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","GRP_DESC","ReadOnly","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","GRP_DESC","AllowEdit","FALSE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","GRP_DESC","VisibleIndex",v.Local.i)
+f.Intrinsic.Math.Add(v.local.i,1,v.Local.i)
+
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DESC_LINK","Caption","Link Description")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DESC_LINK","HeaderFontBold","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DESC_LINK","HeaderHAlignment","CENTER")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DESC_LINK","CellHAlignment","LEFT")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DESC_LINK","MinWidth",200)
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DESC_LINK","ReadOnly","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DESC_LINK","AllowEdit","FALSE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DESC_LINK","VisibleIndex",v.Local.i)
+f.Intrinsic.Math.Add(v.local.i,1,v.Local.i)
+
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","NAME_STRUCTURE","Caption","File Structure")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","NAME_STRUCTURE","HeaderFontBold","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","NAME_STRUCTURE","HeaderHAlignment","CENTER")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","NAME_STRUCTURE","CellHAlignment","LEFT")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","NAME_STRUCTURE","MinWidth",200)
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","NAME_STRUCTURE","ReadOnly","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","NAME_STRUCTURE","AllowEdit","FALSE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","NAME_STRUCTURE","VisibleIndex",v.Local.i)
+f.Intrinsic.Math.Add(v.local.i,1,v.Local.i)
+
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","PATH_BASE","Caption","File Directory")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","PATH_BASE","HeaderFontBold","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","PATH_BASE","HeaderHAlignment","CENTER")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","PATH_BASE","CellHAlignment","LEFT")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","PATH_BASE","MinWidth",200)
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","PATH_BASE","ReadOnly","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","PATH_BASE","AllowEdit","FALSE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","PATH_BASE","VisibleIndex",v.Local.i)
+f.Intrinsic.Math.Add(v.local.i,1,v.Local.i)
+
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DELETE","Caption","Del")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DELETE","HeaderFontBold","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DELETE","HeaderHAlignment","CENTER")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DELETE","CellHAlignment","CENTER")
+gui.fmDLMaint.GsGcMaint.ColumnEdit("gvFileMX","DELETE","EditorButton","DEL")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DELETE","MinWidth",35)
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DELETE","ReadOnly","TRUE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DELETE","AllowEdit","FALSE")
+gui.fmDLMaint.GsGcMaint.SetColumnProperty("gvFileMX","DELETE","VisibleIndex",v.Local.i)
+f.Intrinsic.Math.Add(v.local.i,1,v.Local.i)
+
+gui.fmDLMaint.GsGcMaint.ResumeLayout()
+gui.fmDLMaint.GsGcMaint.Visible(true)
+
+gui.fmDLMaint.GsGcMaint.MainView("gvFileMX")
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.GV_Format.End
+
+Program.Sub.CBO_Load.Start
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+v.Local.sSQL.Declare
+v.Local.sRet.Declare
+v.Local.sLine.Declare
+v.Local.sData.Declare
+v.Local.sType.Declare
+v.Local.i.Declare
+
+gui.fmDLMaint.cboLinkType.ClearItems
+
+f.ODBC.Connection!conx.OpenCompanyConnection
+
+	f.ODBC.Connection!conx.ExecuteandReturn("Select LINK_TYPE, rtrim(DESCRIPTION) as LINK_DESC from GCG_5951_LINK_TYPES",v.Local.sRet)
+	
+f.ODBC.Connection!conx.Close
+
+f.Intrinsic.String.Split(v.Local.sRet,"#$#",v.Local.sLine)
+
+f.Intrinsic.Control.For(v.Local.i,0,v.Local.sLine.UBound,1)
+	f.Intrinsic.String.Split(v.Local.sLine(v.Local.i),"*!*",v.Local.sData)
+	f.Intrinsic.String.Build("{0} - {1}",v.Local.sData(0),v.Local.sData(1),v.Local.sType)
+	gui.fmDLMaint.cboLinkType.AddItem(v.Local.sType)
+f.Intrinsic.Control.Next(v.Local.i)
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.CBO_Load.End
+
+Program.Sub.cmdUpdate_Click.Start
+f.Intrinsic.Control.Try
+v.Local.sError.Declare
+
+f.Global.Registry.AddValue("SUPERVSR",v.Caller.CompanyCode,"6592MX",1000,1000,false,v.Screen.fmDLMaint!txtEmail.Text,true,1,1,v.Ambient.Date,v.Ambient.Now)
+
+f.Intrinsic.Control.Catch
+	f.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	f.Intrinsic.UI.Msgbox(V.Local.sError)
+	f.Intrinsic.Control.End 
+f.Intrinsic.Control.EndTry
+Program.Sub.cmdUpdate_Click.End
+
+Program.Sub.Comments.Start
+${$5$}$2.0.0.0$}$2
+${$6$}$rcole$}$20220815145543279$}$ZUe18EWXbmRoTBVoeWbrFXakeGdGvm0Oq0Sy2GO/i0s8+lfs2UxQLhN+sTJIoYobXquwoHoL6xA=
+Program.Sub.Comments.End
